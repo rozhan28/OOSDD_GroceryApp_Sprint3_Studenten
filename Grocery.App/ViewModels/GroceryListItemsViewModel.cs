@@ -15,6 +15,7 @@ namespace Grocery.App.ViewModels
         private readonly IGroceryListItemsService _groceryListItemsService;
         private readonly IProductService _productService;
         private readonly IFileSaverService _fileSaverService;
+        private List<Product> _allAvailableProducts = new();
 
         public ObservableCollection<GroceryListItem> MyGroceryListItems { get; set; } = [];
         public ObservableCollection<Product> AvailableProducts { get; set; } = [];
@@ -22,7 +23,7 @@ namespace Grocery.App.ViewModels
         [ObservableProperty]
         GroceryList groceryList = new(0, "None", DateOnly.MinValue, "", 0);
         [ObservableProperty]
-        string myMessage = string.Empty;
+        string myMessage;
 
         public GroceryListItemsViewModel(IGroceryListItemsService groceryListItemsService, IProductService productService, IFileSaverService fileSaverService)
         {
@@ -42,9 +43,16 @@ namespace Grocery.App.ViewModels
         private void GetAvailableProducts()
         {
             AvailableProducts.Clear();
+            _allAvailableProducts.Clear();
+
             foreach (Product p in _productService.GetAll())
+            {
                 if (MyGroceryListItems.FirstOrDefault(g => g.ProductId == p.Id) == null && p.Stock > 0)
+                {
                     AvailableProducts.Add(p);
+                    _allAvailableProducts.Add(p);
+                }
+            }
         }
 
         partial void OnGroceryListChanged(GroceryList value)
@@ -86,6 +94,26 @@ namespace Grocery.App.ViewModels
             }
         }
 
+        [RelayCommand]
+        public void Search(string searchTerm)
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                AvailableProducts.Clear();
+                foreach (var p in _allAvailableProducts)
+                    AvailableProducts.Add(p);
+            }
+            else
+            {
+                var filtered = _allAvailableProducts
+                    .Where(p => p.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+                AvailableProducts.Clear();
+                foreach (var p in filtered)
+                    AvailableProducts.Add(p);
+            }
+        }
     }
 }
 
