@@ -1,15 +1,17 @@
-﻿
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
 
 namespace Grocery.App.ViewModels
 {
-    public partial class LoginViewModel : BaseViewModel
+    public partial class LoginViewModel(
+        IAuthService authService,
+        GlobalViewModel global
+    ) : BaseViewModel
     {
-        private readonly IAuthService _authService;
-        private readonly GlobalViewModel _global;
+        private readonly IAuthService _authService = authService;
+        private readonly GlobalViewModel _global = global;
 
         [ObservableProperty]
         private string email = "user3@mail.com";
@@ -18,23 +20,20 @@ namespace Grocery.App.ViewModels
         private string password = "user3";
 
         [ObservableProperty]
-        private string loginMessage;
-
-        public LoginViewModel(IAuthService authService, GlobalViewModel global)
-        { //_authService = App.Services.GetServices<IAuthService>().FirstOrDefault();
-            _authService = authService;
-            _global = global;
-        }
+        private string loginMessage = string.Empty;
 
         [RelayCommand]
         private void Login()
         {
             Client? authenticatedClient = _authService.Login(Email, Password);
+
             if (authenticatedClient != null)
             {
-                LoginMessage = $"Welkom {authenticatedClient.Name}!";
+                string clientName = authenticatedClient.Name ?? "gebruiker";
+                LoginMessage = $"Welkom {clientName}!";
+
                 _global.Client = authenticatedClient;
-                Application.Current.MainPage = new AppShell();
+                Application.Current!.MainPage = new AppShell();
             }
             else
             {
@@ -43,3 +42,4 @@ namespace Grocery.App.ViewModels
         }
     }
 }
+
