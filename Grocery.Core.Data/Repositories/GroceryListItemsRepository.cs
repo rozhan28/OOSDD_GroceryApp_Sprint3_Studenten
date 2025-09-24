@@ -9,7 +9,8 @@ namespace Grocery.Core.Data.Repositories
 
         public GroceryListItemsRepository()
         {
-            groceryListItems = [
+            groceryListItems =
+            [
                 new GroceryListItem(1, 1, 1, 3),
                 new GroceryListItem(2, 1, 2, 1),
                 new GroceryListItem(3, 1, 3, 4),
@@ -33,7 +34,7 @@ namespace Grocery.Core.Data.Repositories
             int newId = groceryListItems.Max(g => g.Id) + 1;
             item.Id = newId;
             groceryListItems.Add(item);
-            return Get(item.Id);
+            return Get(item.Id)!; 
         }
 
         public GroceryListItem? Delete(GroceryListItem item)
