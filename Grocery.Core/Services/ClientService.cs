@@ -16,6 +16,10 @@ namespace Grocery.Core.Services
 
         public void Register(Client client)
         {
+            var existing = _clientRepository.Get(client.EmailAddress);
+            if (existing != null)
+                throw new InvalidOperationException("Email bestaat al");
+
             _clientRepository.Add(client);
         }
 
