@@ -41,7 +41,6 @@ namespace Grocery.Core.Services
             return _groceryRepository.Update(item);
         }
 
-        // 🔹 UC7 - Delen boodschappenlijst
         public async Task ShareGroceryList(IEnumerable<GroceryListItem> items, CancellationToken cancellationToken)
         {
             if (items == null || !items.Any())
@@ -51,7 +50,6 @@ namespace Grocery.Core.Services
             await _fileSaverService.SaveFileAsync("Boodschappen.json", jsonString, cancellationToken);
         }
 
-        // 🔹 UC8 - Zoek producten (op basis van allProducts en huidige lijst)
         public List<Product> SearchProducts(IEnumerable<Product> allProducts, string? searchTerm, IEnumerable<GroceryListItem> itemsOnList)
         {
             var availableProducts = allProducts
@@ -66,3 +64,4 @@ namespace Grocery.Core.Services
         }
     }
 }
+
