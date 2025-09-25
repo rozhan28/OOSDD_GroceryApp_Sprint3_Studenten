@@ -1,16 +1,15 @@
 ﻿using Grocery.App.ViewModels;
 using Grocery.App.Views;
+using Grocery.Core.Interfaces.Services;
 
-namespace Grocery.App
+namespace Grocery.App;
+
+public partial class App : Application
 {
-    public partial class App : Application
+    public App(LoginViewModel viewModel, IClientService clientService)
     {
-        public App(LoginViewModel viewModel)
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-            //MainPage = new AppShell();
-            MainPage = new LoginView(viewModel);
-        }
+        MainPage = new NavigationPage(new LoginView(viewModel, clientService));
     }
 }

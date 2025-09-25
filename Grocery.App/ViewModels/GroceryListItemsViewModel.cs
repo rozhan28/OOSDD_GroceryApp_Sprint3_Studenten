@@ -99,6 +99,7 @@ namespace Grocery.App.ViewModels
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
+
                 AvailableProducts.Clear();
                 foreach (var p in _allAvailableProducts)
                     AvailableProducts.Add(p);
